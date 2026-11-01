@@ -5,7 +5,7 @@ url: https://ackeskin.github.io/#about
 
 ## Summary
 
-Ali Can Keskin is a software engineer in Munich, Germany. He has 5 years of experience in real-time streaming and cross-platform client architecture in C++ and C#. He builds the clients that stream 3D apps from a PC to headsets, phones and the browser, using low-latency WebRTC. One codebase runs on 8 platforms, from native Android (C++/JNI) to the web.
+Ali Can Keskin is a software engineer in Munich, Germany. He has 5 years of experience in real-time streaming and cross-platform client architecture in C++ and C#. He builds the clients that stream 3D apps from a PC to headsets, phones and the browser, using low-latency WebRTC. His clients run on 9 device families, from headsets to Android and the web, and he is moving them onto one OpenXR layer.
 
 ## Skills
 

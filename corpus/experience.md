@@ -5,16 +5,17 @@ url: https://ackeskin.github.io/#experience
 
 ## Hololight, Software Engineer (Jun 2022 to now, Munich)
 
-Works on a real-time XR streaming product in C++ and C# that streams 3D apps from a PC to headsets, phones and the browser.
+XR streaming software company in Munich, about 70 staff. Team of about 10 engineers.
 
-- Led the shared C#/Unity client architecture used on all 8 platforms: Meta Quest, PICO, HTC Vive Focus 3, HoloLens 2, Magic Leap 2, Windows, Android and Web.
-- Designed the WebRTC connection management layer every client uses.
-- Lead developer on the Hub Client, an app launcher shipped to OEM partners. Built the app catalog, SSE-based updates and release pipelines for several vendors, and coordinated releases with partner engineering teams.
-- Wrote native C++/JNI code for Android headsets and tuned the frame delivery path for low latency.
-- Merged 6 platform-specific build variants into one codebase behind platform abstraction APIs.
-- Built the browser client from scratch with JavaScript, WebSockets and WebXR, for zero-install streaming in desktop and headset browsers.
-- Set up CI/CD with build and test stages for every platform.
-- Led the team's move to AI-assisted development: evaluated and rolled out tools, built LLM-based pull request automation in Python, set up agent infrastructure and wrote guidelines that other teams adopted.
+- Lead developer of the Stream clients on 9 device families: HoloLens 2, Meta Quest, Magic Leap 2, PICO, HTC Vive Focus 3, Snap Spectacles, Windows, Android and Web.
+- Turning the per-device clients into one device-agnostic OpenXR API layer (session, hands, controllers, frame override), so a new headset needs far less work.
+- Designing the company's OpenXR extensions for remote rendering, as a member of the Khronos OpenXR working group.
+- Added reprojection and motion estimation to the Monado-based OpenXR runtime, and tested it against the OpenXR conformance suite (CTS).
+- Lead developer on the Hub Client, the app customers use on the headset to sign in, browse and launch streamed apps.
+- Designed the shared WebRTC connection layer and native C++/JNI code for Android headsets, tuned for low latency.
+- Built the browser client from scratch in JavaScript with WebSockets and WebXR.
+- Merged 6 platform build variants into one codebase behind platform abstraction APIs.
+- Led the team's move to AI-assisted development and set up CI/CD for every platform.
 
 ## Simovate, Unity Developer (Sep 2021 to Mar 2022, Ankara)
 
