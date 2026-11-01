@@ -1,0 +1,16 @@
+name = "rag-demo"
+main = "src/worker/index.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://ackeskin.github.io"
+MODEL = "claude-haiku-5-5"
+
+[ai]
+binding = "AI"
+
+# 10 questions per minute per IP.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }

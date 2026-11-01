@@ -1,0 +1,29 @@
+{
+  "name": "rag-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ask questions about my CV and projects. RAG on Cloudflare Workers.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "index": "node scripts/build-index.ts",
+    "build": "npm run index && node scripts/build-web.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test",
+    "dev": "npm run index && wrangler dev",
+    "deploy": "npm run index && wrangler deploy",
+    "pretest": "npm run index",
+    "pretypecheck": "npm run index"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.156.0"
+  }
+}
