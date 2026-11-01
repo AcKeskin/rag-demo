@@ -20,6 +20,11 @@ export function buildPrompt(question: string, hits: Hit[]): Prompt {
     .join("\n\n");
   return {
     system: SYSTEM,
-    user: `<context>\n${context}\n</context>\n\n<question>${question}</question>`,
+    user: `<context>\n${context}\n</context>\n\n<question>${stripTags(question)}</question>`,
   };
+}
+
+/** Stops a question from closing the <question> tag and posing as context. */
+function stripTags(text: string): string {
+  return text.replace(/[<>]/g, "");
 }

@@ -4,8 +4,12 @@ import { dot, normalize } from "./vector.ts";
 
 /** Reciprocal rank fusion constant. 60 is the usual default. */
 const RRF_K = 60;
-/** Vector matches below this similarity are treated as noise. */
-const MIN_SIMILARITY = 0.3;
+/**
+ * Vector matches below this cosine similarity are treated as noise.
+ * bge-small gives unrelated text about 0.4 to 0.6, so this must stay high
+ * or every question finds "something" and the model is always called.
+ */
+const MIN_SIMILARITY = 0.65;
 
 export interface SearchOptions {
   k?: number;
@@ -34,7 +38,10 @@ export class Retriever {
     if (embedder && vectors?.length) {
       try {
         const [q] = await embedder.embed([query]);
-        if (q) rankings.push(rank(vectors.map((v) => dot(normalize(q), v)), MIN_SIMILARITY));
+        if (q) {
+          const qn = normalize(q);
+          rankings.push(rank(vectors.map((v) => dot(qn, v)), MIN_SIMILARITY));
+        }
       } catch {
         // Keyword results are still useful on their own.
       }

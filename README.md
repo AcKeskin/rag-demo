@@ -28,13 +28,13 @@ Without a Worker the widget runs **offline**: the same search runs in the browse
 | Control | Where |
 | --- | --- |
 | API key stays in a Worker secret, never in the browser | `wrangler secret put` |
-| Only listed origins get CORS, others get 403 | `ALLOWED_ORIGINS` |
+| Requests must come from a listed origin, others get 403 | `ALLOWED_ORIGINS` |
 | 10 questions per minute per IP | `[[ratelimits]]` in `wrangler.toml` |
 | Questions capped at 300 characters, answers at 400 tokens | `src/core/prompt.ts`, `src/worker/handler.ts` |
 | No model call when search finds nothing | `src/worker/handler.ts` |
 | Monthly spend limit | Set it in the Claude Console |
 
-A question costs well under a cent with a Haiku-class model.
+The origin check only keeps other websites from using the API, since a script can fake the header. The rate limit and the spend limit are what cap the bill. A question costs well under a cent with a Haiku-class model.
 
 ## Run it
 
@@ -51,7 +51,7 @@ Local Worker:
 ```sh
 echo "ANTHROPIC_API_KEY=sk-ant-..." > .dev.vars
 npm run dev          # http://localhost:8787/api/ask
-curl -X POST localhost:8787/api/ask -H 'content-type: application/json' -d '{"question":"What does he do at Hololight?"}'
+curl -X POST localhost:8787/api/ask -H 'origin: https://ackeskin.github.io' -H 'content-type: application/json' -d '{"question":"What does he do at Hololight?"}'
 ```
 
 ## Deploy

@@ -11,13 +11,10 @@
   "scripts": {
     "index": "node scripts/build-index.ts",
     "build": "npm run index && node scripts/build-web.ts",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "check": "npm run typecheck && npm test",
+    "test": "npm run index && vitest run",
+    "check": "npm run index && tsc --noEmit && vitest run",
     "dev": "npm run index && wrangler dev",
-    "deploy": "npm run index && wrangler deploy",
-    "pretest": "npm run index",
-    "pretypecheck": "npm run index"
+    "deploy": "npm run index && wrangler deploy"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

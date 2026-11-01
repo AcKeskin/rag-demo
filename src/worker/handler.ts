@@ -28,16 +28,17 @@ export function createHandler({ index, fetch: fetchImpl }: HandlerDeps) {
   const retriever = new Retriever(index);
 
   return async function handle(req: Request, env: Env): Promise<Response> {
-    const origin = req.headers.get("origin");
-    const cors = corsHeaders(origin, env.ALLOWED_ORIGINS);
-    if (origin && !cors) return json({ error: "Origin not allowed" }, 403);
-
-    const reply = (body: unknown, status = 200) => json(body, status, cors ?? {});
     const { pathname } = new URL(req.url);
+    if (pathname === "/api/health" && req.method === "GET") return json({ ok: true }, 200);
+    if (pathname !== "/api/ask") return json({ error: "Not found" }, 404);
 
-    if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors ?? {} });
-    if (pathname === "/api/health" && req.method === "GET") return reply({ ok: true });
-    if (pathname !== "/api/ask") return reply({ error: "Not found" }, 404);
+    // Origin is easy to fake outside a browser, so this only stops other sites
+    // from using the API. The rate limit and the spend limit are the real guards.
+    const cors = corsHeaders(req.headers.get("origin"), env.ALLOWED_ORIGINS);
+    if (!cors) return json({ error: "Origin not allowed" }, 403);
+
+    const reply = (body: unknown, status = 200) => json(body, status, cors);
+    if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (req.method !== "POST") return reply({ error: "Method not allowed" }, 405);
 
     const question = await readQuestion(req);
@@ -86,7 +87,7 @@ async function readQuestion(req: Request): Promise<string | null> {
 }
 
 function corsHeaders(origin: string | null, allowed = ""): Record<string, string> | null {
-  if (!origin) return {};
+  if (!origin) return null;
   const list = allowed.split(",").map((o) => o.trim()).filter(Boolean);
   if (!list.includes(origin)) return null;
   return {
@@ -105,6 +106,10 @@ function json(body: unknown, status: number, headers: Record<string, string> = {
   });
 }
 
+/** bge models expect this prefix on short search queries, not on passages. */
+const BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: ";
+
 function workersAiEmbedder(ai: NonNullable<Env["AI"]>, model: string): Embedder {
-  return { embed: async (text) => (await ai.run(model, { text })).data };
+  const prefix = model.includes("bge") ? BGE_QUERY_PREFIX : "";
+  return { embed: async (text) => (await ai.run(model, { text: text.map((t) => prefix + t) })).data };
 }

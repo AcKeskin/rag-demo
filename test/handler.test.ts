@@ -41,6 +41,20 @@ describe("worker handler", () => {
     expect(sent.messages[0].content).toContain("Designed the WebRTC");
   });
 
+  it("rejects requests without an Origin header", async () => {
+    const res = await createHandler({ index: INDEX, fetch: claudeReply("x") })(ask({ question: "webrtc" }, {}), ENV);
+    expect(res.status).toBe(403);
+  });
+
+  it("adds the bge query prefix when embedding with Workers AI", async () => {
+    const run = vi.fn(async () => ({ data: [[1, 0]] }));
+    const index = { ...INDEX, embeddingModel: "@cf/baai/bge-small-en-v1.5", vectors: [[1, 0], [0, 1], [0, 1]] };
+    await createHandler({ index, fetch: claudeReply("x") })(ask({ question: "webrtc" }), { ...ENV, AI: { run } });
+    expect(run).toHaveBeenCalledWith("@cf/baai/bge-small-en-v1.5", {
+      text: ["Represent this sentence for searching relevant passages: webrtc"],
+    });
+  });
+
   it("rejects other origins before doing any work", async () => {
     const fetchMock = claudeReply("x");
     const res = await createHandler({ index: INDEX, fetch: fetchMock })(ask({ question: "webrtc" }, { origin: "https://evil.test" }), ENV);
@@ -91,6 +105,7 @@ describe("worker handler", () => {
   it("returns 404 and 405 for other routes and methods", async () => {
     const handle = createHandler({ index: INDEX });
     expect((await handle(new Request("https://worker.test/nope"), ENV)).status).toBe(404);
-    expect((await handle(new Request("https://worker.test/api/ask"), ENV)).status).toBe(405);
+    const get = new Request("https://worker.test/api/ask", { headers: { origin: ORIGIN } });
+    expect((await handle(get, ENV)).status).toBe(405);
   });
 });

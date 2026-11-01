@@ -32,6 +32,11 @@ describe("chunkMarkdown", () => {
     expect(chunks.map((c) => c.text).join("\n")).toBe(items);
   });
 
+  it("handles CRLF line endings", () => {
+    const [c] = chunkMarkdown(DOC.replace(/\n/g, "\r\n"), "projects.md");
+    expect(c).toMatchObject({ title: "Projects", section: "Planets", text: "GPU planets." });
+  });
+
   it("works without front matter", () => {
     const [c] = chunkMarkdown("Plain text.", "a.md");
     expect(c).toMatchObject({ id: "a#intro", title: "a.md", section: "Intro", url: "" });

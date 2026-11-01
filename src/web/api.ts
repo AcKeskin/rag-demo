@@ -9,7 +9,9 @@ export interface Asker {
   ask(question: string): Promise<AskResult>;
 }
 
-/** Calls the Worker. Falls back to offline search if the Worker fails or is rate limited. */
+const TIMEOUT_MS = 20_000;
+
+/** Calls the Worker. Falls back to offline search if the Worker fails, times out or is rate limited. */
 export function liveAsker(endpoint: string, fallback: Asker): Asker {
   return {
     async ask(question) {
@@ -18,10 +20,11 @@ export function liveAsker(endpoint: string, fallback: Asker): Asker {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ question }),
+          signal: AbortSignal.timeout(TIMEOUT_MS),
         });
         if (res.ok) return { ...((await res.json()) as AskResponse), mode: "live" };
       } catch {
-        // Network error: use the fallback below.
+        // Network error or timeout: use the fallback below.
       }
       return fallback.ask(question);
     },

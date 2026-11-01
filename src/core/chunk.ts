@@ -9,7 +9,7 @@ const MAX_CHARS = 900;
  * Expects front matter with `title` and `url`.
  */
 export function chunkMarkdown(source: string, file: string): Chunk[] {
-  const { meta, body } = parseFrontMatter(source);
+  const { meta, body } = parseFrontMatter(source.replace(/\r\n/g, "\n"));
   const title = meta.title ?? file;
   const url = meta.url ?? "";
   const docId = slug(file.replace(/\.md$/, ""));
