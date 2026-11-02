@@ -61,7 +61,7 @@ export function createHandler({ index, fetch: fetchImpl }: HandlerDeps) {
     const sources = hits.map((h, i) => ({ n: i + 1, title: h.chunk.title, section: h.chunk.section, url: h.chunk.url }));
 
     if (hits.length === 0) {
-      return reply({ answer: "I couldn't find anything about that. Try asking about Ali's work, projects or skills.", sources } satisfies AskResponse);
+      return reply({ answer: "I couldn't find anything about that. Try asking about Ali Can's work, projects or skills.", sources } satisfies AskResponse);
     }
 
     try {

@@ -13,7 +13,7 @@ An Obsidian plugin for slide decks where every slide is an infinite Excalidraw c
 
 ## contexture
 
-Ali's setup for working with AI in Claude Code: coding rules that load before related code, a review pass after, safety hooks and memory. Built with Node.js. Source: github.com/AcKeskin/contexture.
+Ali Can's setup for working with AI in Claude Code: coding rules that load before related code, a review pass after, safety hooks and memory. Built with Node.js. Source: github.com/AcKeskin/contexture.
 
 ## Last Fighter
 
@@ -29,4 +29,4 @@ Research project: predicting where people look in an image with a conditional GA
 
 ## rag-demo
 
-This assistant. Retrieval-augmented generation over Ali's CV and projects, running on Cloudflare Workers with hybrid keyword and vector search. Source: github.com/AcKeskin/rag-demo.
+This assistant. Retrieval-augmented generation over Ali Can's CV and projects, running on Cloudflare Workers with hybrid keyword and vector search. Source: github.com/AcKeskin/rag-demo.
