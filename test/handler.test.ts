@@ -86,6 +86,24 @@ describe("worker handler", () => {
     expect(res.status).toBe(429);
   });
 
+  it("returns 429 when the global limit is hit", async () => {
+    const keys: string[] = [];
+    const env: Env = { ...ENV, GLOBAL_LIMITER: { limit: async ({ key }) => (keys.push(key), { success: false }) } };
+    const res = await createHandler({ index: INDEX, fetch: claudeReply("x") })(ask({ question: "webrtc" }), env);
+    expect(res.status).toBe(429);
+    expect(keys).toEqual(["all"]);
+  });
+
+  it("sets a timeout on the Claude call", async () => {
+    let signal: AbortSignal | null | undefined;
+    const fetchFn = (async (_: unknown, init?: RequestInit) => {
+      signal = init?.signal;
+      return new Response(JSON.stringify({ content: [{ type: "text", text: "ok" }] }));
+    }) as unknown as typeof fetch;
+    await createHandler({ index: INDEX, fetch: fetchFn })(ask({ question: "webrtc" }), ENV);
+    expect(signal).toBeInstanceOf(AbortSignal);
+  });
+
   it("returns 502 with sources when Claude fails", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const res = await createHandler({ index: INDEX, fetch: claudeReply("overloaded", 529) })(ask({ question: "webrtc" }), ENV);
