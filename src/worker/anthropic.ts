@@ -1,6 +1,8 @@
 import type { Prompt } from "../core/prompt.ts";
 
 const API_URL = "https://api.anthropic.com/v1/messages";
+/** The widget gives up after 20 s, so there is no point waiting longer. */
+const TIMEOUT_MS = 15_000;
 
 export class UpstreamError extends Error {
   readonly status: number;
@@ -21,6 +23,7 @@ export interface CompleteOptions {
 export async function complete(prompt: Prompt, opts: CompleteOptions): Promise<string> {
   const res = await (opts.fetch ?? fetch)(API_URL, {
     method: "POST",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
     headers: {
       "content-type": "application/json",
       "x-api-key": opts.apiKey,

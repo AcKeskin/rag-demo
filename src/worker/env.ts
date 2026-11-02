@@ -16,4 +16,6 @@ export interface Env {
   MODEL?: string;
   AI?: AiBinding;
   RATE_LIMITER?: RateLimitBinding;
+  /** Same binding type, one shared key: caps all visitors together. */
+  GLOBAL_LIMITER?: RateLimitBinding;
 }

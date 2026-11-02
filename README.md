@@ -2,7 +2,7 @@
 
 Ask questions about my CV and projects. A small retrieval-augmented generation (RAG) app on Cloudflare Workers, with Claude writing the answers.
 
-Live on [ackeskin.github.io](https://ackeskin.github.io).
+Built to be embedded on [ackeskin.github.io](https://ackeskin.github.io).
 
 ## How it works
 
@@ -29,12 +29,12 @@ Without a Worker the widget runs **offline**: the same search runs in the browse
 | --- | --- |
 | API key stays in a Worker secret, never in the browser | `wrangler secret put` |
 | Requests must come from a listed origin, others get 403 | `ALLOWED_ORIGINS` |
-| 10 questions per minute per IP | `[[ratelimits]]` in `wrangler.toml` |
-| Questions capped at 300 characters, answers at 400 tokens | `src/core/prompt.ts`, `src/worker/handler.ts` |
+| 10 questions per minute per IP, 40 across all visitors | `[[ratelimits]]` in `wrangler.toml` |
+| Questions capped at 300 characters, answers at 400 tokens, 15 s timeout | `src/core/prompt.ts`, `src/worker/handler.ts` |
 | No model call when search finds nothing | `src/worker/handler.ts` |
 | Monthly spend limit | Set it in the Claude Console |
 
-The origin check only keeps other websites from using the API, since a script can fake the header. The rate limit and the spend limit are what cap the bill. A question costs well under a cent with a Haiku-class model.
+The origin check only keeps other websites from using the API, since a script can fake the header. The rate limits and the spend limit are what cap the bill. Cloudflare counts rate limits per location, so the global limit is approximate; the spend limit is the hard cap. A question costs well under a cent with a Haiku-class model.
 
 ## Run it
 

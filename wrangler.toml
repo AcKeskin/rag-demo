@@ -14,3 +14,9 @@ binding = "AI"
 name = "RATE_LIMITER"
 namespace_id = "1001"
 simple = { limit = 10, period = 60 }
+
+# 40 questions per minute across all visitors.
+[[ratelimits]]
+name = "GLOBAL_LIMITER"
+namespace_id = "1004"
+simple = { limit = 40, period = 60 }

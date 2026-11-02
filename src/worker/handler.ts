@@ -51,6 +51,10 @@ export function createHandler({ index, fetch: fetchImpl }: HandlerDeps) {
       const { success } = await env.RATE_LIMITER.limit({ key });
       if (!success) return reply({ error: "Too many questions. Try again in a minute." }, 429);
     }
+    if (env.GLOBAL_LIMITER) {
+      const { success } = await env.GLOBAL_LIMITER.limit({ key: "all" });
+      if (!success) return reply({ error: "The demo is busy. Try again in a minute." }, 429);
+    }
 
     const embedder = env.AI && index.embeddingModel ? workersAiEmbedder(env.AI, index.embeddingModel) : undefined;
     const hits = await retriever.search(question, { k: TOP_K, embedder });
